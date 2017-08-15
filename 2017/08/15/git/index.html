@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Hi,Strangers. | Shea的小站</title>
+  <title>git | Shea的小站</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+  <meta name="description" content="添加远程库： 本地创建Git库 在Github上创建一个Git仓库，复制仓库名，例如git@github.com:SeanPC/me.git。 然后在本地执行 git remote add origin git@github.com:SeanPC/me.git 推送本地数据到Git git push -u origin master 把本地库内容推送到远程，用git push命令，实际上是把当前分">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hi,Strangers.">
-<meta property="og:url" content="http://sheay.club/2017/08/14/hello-world/index.html">
+<meta property="og:title" content="git">
+<meta property="og:url" content="http://sheay.club/2017/08/15/git/index.html">
 <meta property="og:site_name" content="Shea的小站">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="添加远程库： 本地创建Git库 在Github上创建一个Git仓库，复制仓库名，例如git@github.com:SeanPC/me.git。 然后在本地执行 git remote add origin git@github.com:SeanPC/me.git 推送本地数据到Git git push -u origin master 把本地库内容推送到远程，用git push命令，实际上是把当前分">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2017-08-14T10:00:31.931Z">
+<meta property="og:updated_time" content="2017-08-15T04:07:08.544Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hi,Strangers.">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="twitter:title" content="git">
+<meta name="twitter:description" content="添加远程库： 本地创建Git库 在Github上创建一个Git仓库，复制仓库名，例如git@github.com:SeanPC/me.git。 然后在本地执行 git remote add origin git@github.com:SeanPC/me.git 推送本地数据到Git git push -u origin master 把本地库内容推送到远程，用git push命令，实际上是把当前分">
   
     <link rel="alternate" href="/atom.xml" title="Shea的小站" type="application/atom+xml">
   
@@ -68,10 +68,10 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main"><article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-git" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2017/08/14/hello-world/" class="article-date">
-  <time datetime="2017-08-14T10:00:31.931Z" itemprop="datePublished">2017-08-14</time>
+    <a href="/2017/08/15/git/" class="article-date">
+  <time datetime="2017-08-15T03:54:06.000Z" itemprop="datePublished">2017-08-15</time>
 </a>
     
   </div>
@@ -82,7 +82,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Hi,Strangers.
+      git
     </h1>
   
 
@@ -90,20 +90,28 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <p>添加远程库：</p>
+<p>本地创建Git库</p>
+<p>在Github上创建一个Git仓库，复制仓库名，例如git@github.com:SeanPC/me.git。</p>
+<p>然后在本地执行</p>
+<p>git remote add origin git@github.com:SeanPC/me.git</p>
+<p>推送本地数据到Git</p>
+<p>git push -u origin master</p>
+<p>把本地库内容推送到远程，用git push命令，实际上是把当前分支master推送到远程</p>
+<p>由于远程库是空的，第一次推送master分支时，加上了-u参数，Git不但会把本地分支内容推送到新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令。</p>
+<p>至此,只要本地做了提交，就可以通过命令<br>git push origin master</p>
+<p>把本地master分支的最新修改内容推送到Git上。现在就做到了真正的分布式版本库。</p>
+<p>注意：<br>有些使用https的每次都需要验证，而ssh则不需要。</p>
+<p>从远程库克隆：</p>
+<p>在Git上创建一个新的仓库，并勾选Initialize this repository with a README，这样Git就会自动创建一个README.me文件，创建完毕之后就能看到README.me文件</p>
+<p>在本地</p>
+<p>git clone <em>*</em></p>
+<p>完成！</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sheay.club/2017/08/14/hello-world/" data-id="cj6dome440004yhnvp4ucvbb7" class="article-share-link">Share</a>
+      <a data-url="http://sheay.club/2017/08/15/git/" data-id="cj6dome430003yhnvck1iaelf" class="article-share-link">Share</a>
       
       
     </footer>
@@ -112,15 +120,20 @@
     
 <nav id="article-nav">
   
-    <a href="/2017/08/14/My-First-Blog/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2017/08/15/Start-Docker/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          My First Blog
+          Start Docker
         
       </div>
     </a>
   
+  
+    <a href="/2017/08/14/My-First-Blog/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">My First Blog</div>
+    </a>
   
 </nav>
 
