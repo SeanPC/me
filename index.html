@@ -91,11 +91,42 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h1 id="Confluence-Installing"><a href="#Confluence-Installing" class="headerlink" title="Confluence Installing"></a>Confluence Installing</h1><h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>ubuntu==14.04</li>
+<li>confluence==5.5</li>
+<li>postgres==9.4</li>
+<li>java==1.7</li>
+</ul>
+<p>##安装步骤</p>
+<h3 id="下载需要的安装包-lt-需要添加链接-gt"><a href="#下载需要的安装包-lt-需要添加链接-gt" class="headerlink" title="下载需要的安装包 &lt;需要添加链接&gt;"></a>下载需要的安装包 &lt;需要添加链接&gt;</h3><h3 id="解压并安装"><a href="#解压并安装" class="headerlink" title="解压并安装"></a>解压并安装</h3><blockquote>
+<p>$ ./atlassian-confluence-5.5.4-x64.bin</p>
+</blockquote>
+<h3 id="打开浏览器，http-localhost-8090"><a href="#打开浏览器，http-localhost-8090" class="headerlink" title="打开浏览器，http://localhost:8090"></a>打开浏览器，<a href="http://localhost:8090" target="_blank" rel="external">http://localhost:8090</a></h3><p>记下这里的Server ID：ADFI-2763-6EJC-35Q4</p>
+<p>###破解</p>
+<blockquote>
+<p>#####停止服务<br>$ service confluence stop </p>
+<p>$ unzip confluence5.1-crack.zip </p>
+<p>$ cd confluence5.1-crack </p>
+<p>$ ls </p>
+<p>atlassian-extras-2.4.jar  iNViSiBLE<br>$ ./keygen.sh</p>
+<p>###导入破解文件<br>将破解后的授权文件导入到目录中</p>
+<p>$ cp atlassian-extras-2.4.jar  /usr/local/confluence/confluence/WEB-INF/lib/</p>
+</blockquote>
+<p>##创建confluence数据库<br>创建名为confluence的pg数据库和新建一个用于confluence的用户</p>
+<p>###重启服务</p>
+<p>###web安装</p>
+<p>按照安装引导，输入相关字段进行安装</p>
+<p>###汉化</p>
+<blockquote>
+<p>导入汉化文件</p>
+<p>$cp Confluence-5.4.4-language-pack-zh_CN.jar  /opt/atlassian/confluence/confluence/WEB-INF/lib/</p>
+<p>汉化完重启<br>$ service confluence restart</p>
+</blockquote>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sheay.club/2017/08/16/Confluence-Installing/" data-id="cj6euvha50000rrnvrxud3tgg" class="article-share-link">Share</a>
+      <a data-url="http://sheay.club/2017/08/16/Confluence-Installing/" data-id="cj6fuzd110000uwnv06cn66xi" class="article-share-link">Share</a>
       
       
     </footer>
@@ -131,7 +162,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sheay.club/2017/08/16/Ubuntu-Mysql-Installing/" data-id="cj6euvhad0003rrnva3eilg1g" class="article-share-link">Share</a>
+      <a data-url="http://sheay.club/2017/08/16/Ubuntu-Mysql-Installing/" data-id="cj6fuzd1f0004uwnv7zyny6ho" class="article-share-link">Share</a>
       
       
     </footer>
@@ -169,7 +200,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sheay.club/2017/08/15/Start-Markdown/" data-id="cj6euvhac0002rrnvqoddxqyj" class="article-share-link">Share</a>
+      <a data-url="http://sheay.club/2017/08/15/Start-Markdown/" data-id="cj6fuzd1e0003uwnv9p3vn3di" class="article-share-link">Share</a>
       
       
     </footer>
@@ -205,7 +236,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sheay.club/2017/08/15/Start-Docker/" data-id="cj6euvhaa0001rrnvibflzjrt" class="article-share-link">Share</a>
+      <a data-url="http://sheay.club/2017/08/15/Start-Docker/" data-id="cj6fuzd1d0002uwnvjaxwy9x2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -258,7 +289,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sheay.club/2017/08/15/git/" data-id="cj6euvhar0005rrnvptvo4dpy" class="article-share-link">Share</a>
+      <a data-url="http://sheay.club/2017/08/15/git/" data-id="cj6fuzd1g0005uwnvekx6v1oj" class="article-share-link">Share</a>
       
       
     </footer>
@@ -296,7 +327,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sheay.club/2017/08/14/My-First-Blog/" data-id="cj6euvhar0004rrnv6glx5oav" class="article-share-link">Share</a>
+      <a data-url="http://sheay.club/2017/08/14/My-First-Blog/" data-id="cj6fuzd1a0001uwnvhferw4wg" class="article-share-link">Share</a>
       
       
     </footer>
@@ -341,7 +372,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sheay.club/2017/08/14/hello-world/" data-id="cj6euvhav0006rrnvx1qshkkc" class="article-share-link">Share</a>
+      <a data-url="http://sheay.club/2017/08/14/hello-world/" data-id="cj6fuzd1h0006uwnv2wovzjai" class="article-share-link">Share</a>
       
       
     </footer>
