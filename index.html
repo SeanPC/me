@@ -267,6 +267,137 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sheay.club/2017/08/25/Gitlab-Installing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shea">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shea的小站">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/08/25/Gitlab-Installing/" itemprop="url">Gitlab Installing</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-25T11:12:12+08:00">
+                2017-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>#Gitlab 简介<br>GitHub是2008年由Ruby on Rails编写而成，与业界闻名的Github类似;但要将代码上传到GitHub上面，而且将项目设为私有还要收费。GitLab 是一个用于仓库管理系统的开源项目，使用Git作为代码管理工具，可通过Web界面进行访问公开的或者私人项目，非常适合在团队内部使用。<br>在gitlab中有三个版本，分别是CE（社区版）、EE（企业版）、OM（RPM包完整版，里面包括nginx、Redis等其它软件，比较大）。这里的编译安装版，是指CE版的源码安装<br>官网<a href="https://docs.gitlab.com/" target="_blank" rel="external">https://docs.gitlab.com/</a></p>
+<p>##使用omnibus packages安装</p>
+<p>###在 Ubuntu 14 安装<br>使用国内安装源镜像，加快安装速度。修改/etc/apt/sources.list.d/gitlab-ce.list:</p>
+<blockquote>
+<p>curl <a href="https://packages.gitlab.com/gpg.key" target="_blank" rel="external">https://packages.gitlab.com/gpg.key</a> 2&gt; /dev/null | sudo apt-key add - &amp;&gt;/dev/null<br>vi /etc/apt/sources.list.d/gitlab-ce.list<br>deb <a href="https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/debian" target="_blank" rel="external">https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/debian</a> jessie main<br>开始安装<br>安装依赖包<br>sudo apt-get install curl openssh-server ca-certificates postfix<br>安装 GitLab 社区版<br>apt-get install gitlab-ce<br>初始化，初始化完自动启动 GitLab<br>sudo gitlab-ctl reconfigure</p>
+</blockquote>
+<p>###问题</p>
+<p>####CXABI_1.3.8….not found<br>解决方案</p>
+<blockquote>
+<p>sudo add-apt-repository ppa:ubuntu-toolchain-r/test<br>sudo apt-get update<br>sudo apt-get install gcc-4.9 g++-4.9</p>
+<p>####Excepted process tp exit with [0], but received ‘137’<br>内存不足，导致OOM关闭，解决方案增加内存。</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://sheay.club/2017/08/16/Confluence-Installing/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -344,14 +475,13 @@
 <li>postgres==9.4</li>
 <li>java==1.7</li>
 </ul>
-<h2 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h2><h3 id="下载需要的安装包-lt-需要添加链接-gt"><a href="#下载需要的安装包-lt-需要添加链接-gt" class="headerlink" title="下载需要的安装包 &lt;需要添加链接&gt;"></a>下载需要的安装包 &lt;需要添加链接&gt;</h3><h3 id="解压并安装"><a href="#解压并安装" class="headerlink" title="解压并安装"></a>解压并安装</h3><p>&lt;% codeblock  %&gt;<br>$ ./atlassian-confluence-5.5.4-x64.bin<br>&lt;% endcodeblock  %&gt;</p>
+<h2 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h2><h3 id="下载需要的安装包-lt-需要添加链接-gt"><a href="#下载需要的安装包-lt-需要添加链接-gt" class="headerlink" title="下载需要的安装包 &lt;需要添加链接&gt;"></a>下载需要的安装包 &lt;需要添加链接&gt;</h3><h3 id="解压并安装"><a href="#解压并安装" class="headerlink" title="解压并安装"></a>解压并安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ./atlassian-confluence-5.5.4-x64.bin</div></pre></td></tr></table></figure>
 <h3 id="打开浏览器，http-localhost-8090"><a href="#打开浏览器，http-localhost-8090" class="headerlink" title="打开浏览器，http://localhost:8090"></a>打开浏览器，<a href="http://localhost:8090" target="_blank" rel="external">http://localhost:8090</a></h3><p>记下这里的Server ID：ADFI-2763-6EJC-35Q4</p>
-<h3 id="破解"><a href="#破解" class="headerlink" title="破解"></a>破解</h3><p>&lt;% codeblock  %&gt;</p>
-<h5 id="停止服务"><a href="#停止服务" class="headerlink" title="停止服务"></a>停止服务</h5><p>$ service confluence stop<br>$ unzip confluence5.1-crack.zip<br>$ cd confluence5.1-crack<br>$ ls<br>atlassian-extras-2.4.jar  iNViSiBLE<br>$ ./keygen.sh<br>&lt;% endcodeblock  %&gt;</p>
-<h3 id="导入破解文件"><a href="#导入破解文件" class="headerlink" title="导入破解文件"></a>导入破解文件</h3><p>将破解后的授权文件导入到目录中<br>&lt;% codeblock  %&gt;<br>$ cp atlassian-extras-2.4.jar  /usr/local/confluence/confluence/WEB-INF/lib/<br>&lt;% endcodeblock  %&gt;</p>
+<h3 id="破解"><a href="#破解" class="headerlink" title="破解"></a>破解</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">##### 停止服务</div><div class="line">$ service confluence stop  </div><div class="line">$ unzip confluence5.1-crack.zip  </div><div class="line">$ cd confluence5.1-crack  </div><div class="line">$ ls </div><div class="line">atlassian-extras-2.4.jar  iNViSiBLE </div><div class="line">$ ./keygen.sh</div></pre></td></tr></table></figure>
+<h3 id="导入破解文件"><a href="#导入破解文件" class="headerlink" title="导入破解文件"></a>导入破解文件</h3><p>将破解后的授权文件导入到目录中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ cp atlassian-extras-2.4.jar  /usr/local/confluence/confluence/WEB-INF/lib/</div></pre></td></tr></table></figure></p>
 <h2 id="创建confluence数据库"><a href="#创建confluence数据库" class="headerlink" title="创建confluence数据库"></a>创建confluence数据库</h2><p>创建名为confluence的pg数据库和新建一个用于confluence的用户</p>
 <h3 id="重启服务"><a href="#重启服务" class="headerlink" title="重启服务"></a>重启服务</h3><h3 id="web安装"><a href="#web安装" class="headerlink" title="web安装"></a>web安装</h3><p>按照安装引导，输入相关字段进行安装</p>
-<h3 id="汉化"><a href="#汉化" class="headerlink" title="汉化"></a>汉化</h3><p>&lt;% codeblock  %&gt;<br>导入汉化文件<br>$cp Confluence-5.4.4-language-pack-zh_CN.jar  /opt/atlassian/confluence/confluence/WEB-INF/lib/<br>汉化完重启<br>$ service confluence restart</p>
+<h3 id="汉化"><a href="#汉化" class="headerlink" title="汉化"></a>汉化</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">导入汉化文件</div><div class="line">$cp Confluence-5.4.4-language-pack-zh_CN.jar  /opt/atlassian/confluence/confluence/WEB-INF/lib/</div><div class="line">汉化完重启</div><div class="line">$ service confluence restart</div></pre></td></tr></table></figure>
 <h3 id="至此完成"><a href="#至此完成" class="headerlink" title="至此完成"></a>至此完成</h3>
           
         
@@ -1049,7 +1179,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
