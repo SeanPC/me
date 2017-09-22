@@ -94,17 +94,17 @@
 
 
 
-<meta name="description" content="Docker启动过程：检查本地是否存在指定的镜像，不存在就从公有仓库下载利用镜像创建并启动一个容器分配一个文件系统，并在只读的镜像层外面挂载一层可读写层从宿主主机配置的网桥接口中桥接一个虚拟接口到容器中去从地址池配置一个ip地址给容器执行用户指定的应用程序执行完毕后容器被终止">
+<meta name="description" content="安装：  sudo mkdir -p /etc/dockersudo tee /etc/docker/daemon.json &amp;lt;&amp;lt;-‘EOF’{ “registry-mirrors”: [“https://iwki5hdk.mirror.aliyuncs.com“]}EOFsudo service docker restart  Docker启动过程： 检查本地是否存在指定的镜像，不存">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Start-Docker">
 <meta property="og:url" content="http://sheay.club/2017/09/04/Start-Docker/index.html">
 <meta property="og:site_name" content="Shea的小站">
-<meta property="og:description" content="Docker启动过程：检查本地是否存在指定的镜像，不存在就从公有仓库下载利用镜像创建并启动一个容器分配一个文件系统，并在只读的镜像层外面挂载一层可读写层从宿主主机配置的网桥接口中桥接一个虚拟接口到容器中去从地址池配置一个ip地址给容器执行用户指定的应用程序执行完毕后容器被终止">
+<meta property="og:description" content="安装：  sudo mkdir -p /etc/dockersudo tee /etc/docker/daemon.json &amp;lt;&amp;lt;-‘EOF’{ “registry-mirrors”: [“https://iwki5hdk.mirror.aliyuncs.com“]}EOFsudo service docker restart  Docker启动过程： 检查本地是否存在指定的镜像，不存">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-06T10:11:24.547Z">
+<meta property="og:updated_time" content="2017-09-22T07:22:56.243Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Start-Docker">
-<meta name="twitter:description" content="Docker启动过程：检查本地是否存在指定的镜像，不存在就从公有仓库下载利用镜像创建并启动一个容器分配一个文件系统，并在只读的镜像层外面挂载一层可读写层从宿主主机配置的网桥接口中桥接一个虚拟接口到容器中去从地址池配置一个ip地址给容器执行用户指定的应用程序执行完毕后容器被终止">
+<meta name="twitter:description" content="安装：  sudo mkdir -p /etc/dockersudo tee /etc/docker/daemon.json &amp;lt;&amp;lt;-‘EOF’{ “registry-mirrors”: [“https://iwki5hdk.mirror.aliyuncs.com“]}EOFsudo service docker restart  Docker启动过程： 检查本地是否存在指定的镜像，不存">
 
 
 
@@ -333,7 +333,12 @@
       
 
       
-        <p>Docker启动过程：<br>检查本地是否存在指定的镜像，不存在就从公有仓库下载<br>利用镜像创建并启动一个容器<br>分配一个文件系统，并在只读的镜像层外面挂载一层可读写层<br>从宿主主机配置的网桥接口中桥接一个虚拟接口到容器中去<br>从地址池配置一个ip地址给容器<br>执行用户指定的应用程序<br>执行完毕后容器被终止</p>
+        <p>安装：</p>
+<blockquote>
+<p>sudo mkdir -p /etc/docker<br>sudo tee /etc/docker/daemon.json &lt;&lt;-‘EOF’<br>{<br> “registry-mirrors”: [“<a href="https://iwki5hdk.mirror.aliyuncs.com" target="_blank" rel="external">https://iwki5hdk.mirror.aliyuncs.com</a>“]<br>}<br>EOF<br>sudo service docker restart</p>
+</blockquote>
+<p>Docker启动过程：</p>
+<p>检查本地是否存在指定的镜像，不存在就从公有仓库下载<br>利用镜像创建并启动一个容器<br>分配一个文件系统，并在只读的镜像层外面挂载一层可读写层<br>从宿主主机配置的网桥接口中桥接一个虚拟接口到容器中去<br>从地址池配置一个ip地址给容器<br>执行用户指定的应用程序<br>执行完毕后容器被终止</p>
 
       
     </div>
