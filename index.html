@@ -267,6 +267,171 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sheay.club/2017/09/30/nginx-优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shea">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shea的小站">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/30/nginx-优化/" itemprop="url">nginx 优化</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-30T11:02:34+08:00">
+                2017-09-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>lnmp已经成为比较流行的网站服务器端技术配备。越来越多的人开始不满足于能使用nginx，更多人开始关注如何能优化nginx的处理能力。</p>
+<p>使用nginx的目的就是为了提高并发处理能力，但是看到有部分人本机部署lanmp，在同一台机器上使用nginx方向代理apache，就有种脱裤子放屁的感觉。</p>
+<p>在window下运行nginx，还要跑出好的效果，同样是个伪命题，windows下的select模型注定nginx效率不会太高。</p>
+<p>最近看了篇英文文章，结合自己理解，写给大家看看吧。</p>
+<p>优化nginx包括两方面：</p>
+<p>1.是自己重写nginx代码(比如tengine)、本身nginx的代码已经足够优秀，如果不是每秒几千的请求，就忽略这个部分吧。</p>
+<p>2.另一个就是和优化nginx的配置，这是中小型网站可以重点优化的部分。</p>
+<p>nginx的配置文件是一种声明式定义，控制nginx的每一个细节。</p>
+<p>所谓负载调优，就是提高单台机器处理效率，降低单台机器的负载。</p>
+<p>为了提高单台机器的处理效率，cpu的处理速度是足够快的，我们能解决的就是降低磁盘I/O、网络I/O，减少内存使用。</p>
+<p>降低单台机器的负载我们能做的就是负载均衡，把流量打到多台机器处理。</p>
+<p>nginx推荐优化内容：</p>
+<p>1.open files数量优化<br>ulimit -a查看系统参数<br>其中<br>open files (-n) 1024<br>表示系统同时最多能打开的文件数，linux下的所有设备都可以认为是文件，包括网络连接，如果同时超过1024个连接，那么nginx的日志就会报“24: Too many open files”</p>
+<p>多以优化的第一步就是设置open files为ulimit</p>
+<p>修改/etc/profile,增加<br>ulimit -n 65535</p>
+<p>2.Worker Processes数量优化<br>通常来说设置一个cpu核心对应一个worker processer，最多不超过4个，提高worker process的值是为了提高计算能力，但一般在越到cpu瓶颈前，你会遇到别的瓶颈(如网络问题)。</p>
+<p>只有当你要处理大量静态文件的磁盘I/O时，worker进程是单线程的，所以这个读取文件的阻塞IO会降低CPU的处理速度，这是可以增加worker进程数量，其它情况是不需要的。</p>
+<p>3.worker进程连接数优化(Worker Connections)<br>默认情况下这个值是worker_connections 1024，也就是说考虑到keep-alive超时65秒，每个浏览器平均消耗两个链接(chrome会同时打开多个连接来提到加载速度)。</p>
+<p>那么默认情况下nginx平均每秒能处理1024/65/2=8，那么8*86440=64w，差不多相当于每天有60万ip。</p>
+<p>多以普通网站默认值就可以了，如果你的流量一直提升，可以考虑增加这个值为2048或者更高。</p>
+<ol>
+<li><p>CPU Affinity<br>用来设置worker进程使用哪个cpu核心处理请求并且一直使用这个cpu核心。如果你不知道cpu调度，最好别碰这个，操作系统比你更懂如何调度。</p>
+</li>
+<li><p>Keep Alive</p>
+</li>
+</ol>
+<p>Keep alive 没有数据传输的情况下保持客户端和服务端的连接，也就是保持空连接一段时间，避免重现建立链接的时间消耗。nginx处理空连接的效率非常高，1万个空连接大约消耗2.5M内存。如果流量非常大的网站，减少建立连接的时间开销是非常客观的。keep alive的值设置在10-20s之间比较合理。</p>
+<ol>
+<li><p>tcp_nodelay 和 tcp_nopush优化<br>这两个指令影响nginx的底层网络，它们决定操作系统如何处理网络层buffer和什么时候把buffer内容刷新给终端用户。如果你不懂，就可以保持这两个指令默认不变，对nginx性能影响不明显。</p>
+</li>
+<li><p>access日志优化<br>默认情况下，access日志会记录所有请求到日志文件，写操作会增加IO操作，如果不需要统计信息，可以使用百度统计或者cnzz统计，完全可以关闭日志，来减少磁盘写，或者写入内存文件，提高IO效率。</p>
+</li>
+<li><p>Error日志优化<br>错误日志会记录运行中的错误，如果设置的太低，会记录的信息太多，会产生大量IO，推荐设置为warn，这样可以记录大部分信息，而不会有太多IO</p>
+</li>
+<li><p>Open File Cache<br>nginx会读文件系统的许多文件，如果这些文件的描述符能够缓存起来，那么会提高处理效率。详见<a href="http://wiki.nginx.org/HttpCoreModule#open_file_cache" target="_blank" rel="external">http://wiki.nginx.org/HttpCoreModule#open_file_cache</a></p>
+</li>
+<li><p>Buffers size优化<br>buffer的大小是你需要调优最重要参数。如果buffer size太小就会到导致nginx使用临时文件存储response，这会引起磁盘读写IO，流量越大问题越明显。</p>
+</li>
+</ol>
+<p>client_body_buffer_size 处理客户端请求体buffer大小。用来处理POST提交数据，上传文件等。client_body_buffer_size 需要足够大以容纳如果需要上传POST数据。</p>
+<p>fastcgi_buffers，proxy_buffers 处理后端（PHP,Apache）响应。如果这个buffer不够大，同样会引起磁盘都系IO。需要注意的是它们有一个上限值，这个上限值受 fastcgi_max_temp_file_size 、 proxy_max_temp_file_size控制。</p>
+<p>10.磁盘IO<br>如果能把数据全放到内存，不使用磁盘就可以完全去掉磁盘IO。 默认情况下操作系统也会缓存频繁访问的数据以降低IO。所以预算足够的情况加，加大内存。</p>
+<p>11.网络IO<br>假设我们没有了磁盘IO，所有数据都在内存，那么我们的读IO大概有3-6gbps。这种情况下，如果你网络差，一样会很慢。所以尽可能提高网络带宽，压缩传输数据。</p>
+<p>网络带宽买你能买的起的最大带宽，nginx的gzip模块可以用来压缩传输数据，通常gzip_comp_level 设为 4-5，再高就是浪费cpu了。同时也可以采用css，js压缩技术，当然这些技术就与nginx优化无关了。。</p>
+<p>绝招<br>如果你还想提高nginx处理能力，只能祭出大杀器了。别优化了，加机器吧。一点点优化是没有用的，不如扩展机器来的快些。</p>
+<p>ps<br>说道系统的扩展性通常有scale、和extension，区别是前者是数量上扩展，后者是功能上扩展。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://sheay.club/2017/09/29/Supervisor/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1485,142 +1650,6 @@ resolver_timeout           10s;
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://sheay.club/2017/08/15/git/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Shea">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Shea的小站">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/08/15/git/" itemprop="url">git</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-15T11:54:06+08:00">
-                2017-08-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>添加远程库：</p>
-<p>本地创建Git库</p>
-<p>在Github上创建一个Git仓库，复制仓库名，例如git@github.com:SeanPC/me.git。</p>
-<p>然后在本地执行</p>
-<p>git remote add origin git@github.com:SeanPC/me.git</p>
-<p>推送本地数据到Git</p>
-<p>git push -u origin master</p>
-<p>把本地库内容推送到远程，用git push命令，实际上是把当前分支master推送到远程</p>
-<p>由于远程库是空的，第一次推送master分支时，加上了-u参数，Git不但会把本地分支内容推送到新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以简化命令。</p>
-<p>至此,只要本地做了提交，就可以通过命令<br>git push origin master</p>
-<p>把本地master分支的最新修改内容推送到Git上。现在就做到了真正的分布式版本库。</p>
-<p>注意：<br>有些使用https的每次都需要验证，而ssh则不需要。</p>
-<p>从远程库克隆：</p>
-<p>在Git上创建一个新的仓库，并勾选Initialize this repository with a README，这样Git就会自动创建一个README.me文件，创建完毕之后就能看到README.me文件</p>
-<p>在本地</p>
-<p>git clone <em>*</em></p>
-<p>完成！</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1671,7 +1700,7 @@ resolver_timeout           10s;
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
