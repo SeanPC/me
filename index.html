@@ -267,6 +267,334 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://sheay.club/2018/01/03/ELK/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Shea">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Shea的小站">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/03/ELK/" itemprop="url">ELK</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-03T10:06:55+08:00">
+                2018-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="ELK-Elasticsearch-Logstash-Kibana"><a href="#ELK-Elasticsearch-Logstash-Kibana" class="headerlink" title="ELK (Elasticsearch Logstash Kibana)"></a>ELK (Elasticsearch Logstash Kibana)</h2><p>Though we’re focused more on server setup procedure in this document, I will still give a very brief explanation in laymen terms for ELK. To those who are starting new in this stack, must have already heard of MVC (Model View Controller), so take it like this:</p>
+<ul>
+<li>Model      <code>=&gt;</code> Elasticsearch (for Storage, Indexing &amp; Search)</li>
+<li>View       <code>=&gt;</code> Kibana (for DataViz &amp; G-Man, yeah the one in half life :smirk:)</li>
+<li>Controller <code>=&gt;</code> Logstash (For Logs &amp; Filtering)</li>
+</ul>
+<hr>
+<p>Our ELK stack setup has four main components:</p>
+<ul>
+<li>Logstash: The server component of Logstash that processes incoming logs</li>
+<li>Elasticsearch: Stores all of the logs</li>
+<li>Kibana: Web interface for searching and visualizing logs, which will be proxied through Nginx</li>
+<li>Filebeat: Installed on client servers that will send their logs to Logstash, Filebeat serves as a log shipping agent that utilizes the lumberjack networking protocol to communicate with Logstash</li>
+</ul>
+<p><img src="https://assets.digitalocean.com/articles/elk/elk-infrastructure.png" alt="ELK+NGINX"></p>
+<p><strong>These are the versions we are currently setting up in this installment, please make note accordingly if you have specific version requirements.</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">JDK Version - 8</div><div class="line">Elasticsearch - 2.x</div><div class="line">Logstash - 2.2</div><div class="line">Kibana - 4.5</div></pre></td></tr></table></figure>
+<h2 id="Installation-Steps"><a href="#Installation-Steps" class="headerlink" title="Installation Steps"></a>Installation Steps</h2><p>For production go with three separate instances for each, elasticsearch, logstash and kibana. Currently we are setting it up on a single machine. You can opt for similar configuration on any cloud provider.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">OS  - Ubuntu 14.04 LTS</div><div class="line">RAM - 4Gb</div><div class="line">CPU - 2</div></pre></td></tr></table></figure>
+<p>The amount of CPU, RAM, and storage that your ELK Server will require depends on the volume of logs that you intend to gather.</p>
+<p>####AWS<br>Canonical have recently stopped support for smaller instances and hence you can’t pick one from above configuration, so here is a workaround for that (only appreciated in test env) :wink:</p>
+<ul>
+<li>Go to the following link<ul>
+<li><a href="https://cloud-images.ubuntu.com/locator/" target="_blank" rel="external">https://cloud-images.ubuntu.com/locator/</a></li>
+</ul>
+</li>
+<li>Enter the instance ID <code>ami-d05e75b8</code> in the search and once search populated, tap on the value of last column <code>ID</code> of table, which contains same AMI ID.</li>
+<li>The next page you will land on is on AWS EC2 select instance type with all enabled.</li>
+</ul>
+<hr>
+<p>####0 - Preliminary (skip if already done)</p>
+<ul>
+<li><code>$ sudo apt-get update</code></li>
+<li><code>$ sudo apt-get upgrade</code></li>
+</ul>
+<p>####1 - Java 8 Installation</p>
+<ul>
+<li><p>Add Oracle Java PPA to apt:</p>
+<ul>
+<li><code>$ sudo add-apt-repository -y ppa:webupd8team/java</code></li>
+</ul>
+</li>
+<li><p>Update your apt package database:</p>
+<ul>
+<li><code>$ sudo apt-get update</code></li>
+</ul>
+</li>
+<li><p>Install the latest version of Oracle Java 8</p>
+<ul>
+<li><code>$ sudo apt-get -y install oracle-java8-installer</code></li>
+</ul>
+</li>
+<li><p>Check Java installation</p>
+<ul>
+<li><code>$ java -version</code></li>
+</ul>
+</li>
+</ul>
+<hr>
+<p>####2 - Elasticsearch Installation</p>
+<ul>
+<li><p>Import Elasticsearch public GPG key into apt</p>
+<ul>
+<li><code>$ wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -</code></li>
+</ul>
+</li>
+<li><p>Create the Elasticsearch source list</p>
+<ul>
+<li><code>$ echo &quot;deb http://packages.elastic.co/elasticsearch/2.x/debian stable main&quot; | sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list</code></li>
+</ul>
+</li>
+<li><p>Update your package database</p>
+<ul>
+<li><code>$ sudo apt-get update</code></li>
+</ul>
+</li>
+<li><p>Install Elasticsearch</p>
+<ul>
+<li><code>$ sudo apt-get -y install elasticsearch</code></li>
+</ul>
+</li>
+<li><p>Start Elasticsearch service</p>
+<ul>
+<li><code>$ sudo service elasticsearch restart</code></li>
+</ul>
+</li>
+<li><p>Test</p>
+<ul>
+<li><code>$ curl localhost:9200</code></li>
+</ul>
+</li>
+<li><p>If the output is similar to this, then you will know that Elasticsearch is running properly:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="attr">"status"</span> : <span class="number">200</span>,</div><div class="line">  <span class="attr">"name"</span> : <span class="string">"Nuke - Frank Simpson"</span>,</div><div class="line">  <span class="attr">"cluster_name"</span> : <span class="string">"elasticsearch"</span>,</div><div class="line">  <span class="attr">"version"</span> : &#123;</div><div class="line">    <span class="attr">"number"</span> : <span class="string">"1.7.5"</span>,</div><div class="line">    <span class="attr">"build_hash"</span> : <span class="string">"00f95f4ffca6de89d68b7ccaf80d148f1f70e4d4"</span>,</div><div class="line">    <span class="attr">"build_timestamp"</span> : <span class="string">"2016-02-02T09:55:30Z"</span>,</div><div class="line">    <span class="attr">"build_snapshot"</span> : <span class="literal">false</span>,</div><div class="line">    <span class="attr">"lucene_version"</span> : <span class="string">"4.10.4"</span></div><div class="line">  &#125;,</div><div class="line">  <span class="attr">"tagline"</span> : <span class="string">"You Know, for Search"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>Enable Elasticsearch to start on boot<br><code>$ sudo update-rc.d elasticsearch defaults 95 10</code></p>
+</li>
+</ul>
+<p><strong>Production tip:</strong> DO NOT open any other ports, like 9200, to the world! There are many bots that search for 9200 and execute groovy scripts to overtake machines.</p>
+<hr>
+<p>####3 - Logstash Installation</p>
+<ul>
+<li><p>The Logstash package is available from the same repository as Elasticsearch, and public key is already installed, so let’s create the Logstash source list:</p>
+<ul>
+<li><code>$ echo &#39;deb http://packages.elastic.co/logstash/2.2/debian stable main&#39; | sudo tee /etc/apt/sources.list.d/logstash-2.2.x.list</code> </li>
+</ul>
+</li>
+<li><p>Update apt package database:</p>
+<ul>
+<li><code>$ sudo apt-get update</code></li>
+</ul>
+</li>
+<li><p>Install Logstash</p>
+<ul>
+<li><code>$ sudo apt-get install logstash</code></li>
+</ul>
+</li>
+<li><p>Enable start on boot</p>
+<ul>
+<li><code>$ sudo update-rc.d logstash defaults 97 8</code></li>
+</ul>
+</li>
+<li><p>Run service logstash</p>
+<ul>
+<li><code>$ sudo service logstash start</code></li>
+</ul>
+</li>
+<li><p>We have yet to configure Logstash, but let leave it for later.</p>
+</li>
+</ul>
+<hr>
+<p>####4 - Kibana Installation</p>
+<ul>
+<li><p>Download and install the Public Signing Key</p>
+<ul>
+<li><code>$ wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -</code></li>
+</ul>
+</li>
+<li><p>Add the repository definition to your <code>/etc/apt/sources.list.d/kibana.list</code> file</p>
+<ul>
+<li><code>$ echo &quot;deb http://packages.elastic.co/kibana/4.5/debian stable main&quot; | sudo tee -a /etc/apt/sources.list</code></li>
+</ul>
+</li>
+</ul>
+<p><strong>WARNING</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Use the echo method described above to add the Kibana repository. Do not use add-apt-repository, as that command adds a deb-src entry with no corresponding source package. When the deb-src entry, is present, the commands in this procedure generate an error similar to the following:</div><div class="line"></div><div class="line">Unable to find expected entry &apos;main/source/Sources&apos; in Release file (Wrong sources.list entry or malformed file)</div><div class="line">Delete the deb-src entry from the /etc/apt/sources.list.d/kibana.list file to clear the error.</div></pre></td></tr></table></figure></p>
+<ul>
+<li><p>Update apt and install Kibana</p>
+<ul>
+<li><code>$ sudo apt-get update &amp;&amp; sudo apt-get install kibana</code></li>
+</ul>
+</li>
+<li><p>Open Kibana configuration file for editing</p>
+<ul>
+<li><code>$ sudo vi /opt/kibana/config/kibana.yml</code></li>
+</ul>
+</li>
+<li><p>In the Kibana configuration file, find the line that specifies <em>server.host</em>, uncomment and replace the IP address (“0.0.0.0” by default) with “localhost”:</p>
+<ul>
+<li><code>server.host: &quot;localhost&quot;</code></li>
+<li>Save and exit. This setting makes it so Kibana will only be accessible to the localhost. This is fine because we will use an Nginx reverse proxy to allow external access.</li>
+</ul>
+</li>
+<li><p>Enable start on boot</p>
+<ul>
+<li><code>$ sudo update-rc.d kibana defaults 95 10</code></li>
+</ul>
+</li>
+<li><p>Start service Kibana</p>
+<ul>
+<li><code>$ sudo service kibana start</code></li>
+</ul>
+</li>
+<li><p>Before we can use the Kibana web interface, we have to set up a reverse proxy. Let’s do that now, with Nginx.</p>
+</li>
+</ul>
+<hr>
+<p>####3 - Nginx Installation<br><strong>Note:</strong> If you already have an Nginx instance that you want to use, feel free to use that instead. Just make sure to configure Kibana so it is reachable by your Nginx server (you probably want to change the host value, in /opt/kibana/config/kibana.yml, to your Kibana server’s private IP address or hostname). Also, it is recommended that you enable SSL/TLS.</p>
+<ul>
+<li><p>Install Nginx and Apt-utils</p>
+<ul>
+<li><code>$ sudo apt-get install nginx apache2-utils</code></li>
+</ul>
+</li>
+<li><p>Create an admin user and assign password to it</p>
+<ul>
+<li><code>$ sudo htpasswd -c /etc/nginx/htpasswd.users kibanaadmin</code></li>
+</ul>
+</li>
+<li><p>Now open the nginx default server block</p>
+<ul>
+<li><code>$ sudo vim /etc/nginx/sites-available/default</code></li>
+</ul>
+</li>
+<li><p>Delete the file’s contents, and paste the following code block into the file.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">  listen 80;</div><div class="line">    server_name kibana;</div><div class="line"></div><div class="line"></div><div class="line">  error_log   /var/log/nginx/kibana.error.log;</div><div class="line">  access_log  /var/log/nginx/kibana.access.log;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">  location / &#123;</div><div class="line">    rewrite ^/(.*) /$1 break;</div><div class="line">    proxy_ignore_client_abort on;</div><div class="line">    proxy_pass http://localhost:5601;</div><div class="line">    proxy_set_header  X-Real-IP  $remote_addr;</div><div class="line">    proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;</div><div class="line">    proxy_set_header  Host $http_host;</div><div class="line">   </div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>Save and exit. This configures Nginx to direct your server’s HTTP traffic to the Kibana application, which is listening on <code>localhost:5601</code>.</li>
+</ul>
+</li>
+<li><p>Now restart Nginx to reflect your changes</p>
+<ul>
+<li><code>$ sudo service nginx restart</code></li>
+</ul>
+</li>
+<li><p>Kibana is now accessible via your FQDN or the public IP address of your ELK Server i.e.</p>
+<ul>
+<li><code>http://elk\_server\_public\_ip/</code></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://sheay.club/2017/09/30/nginx-优化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1529,127 +1857,6 @@ resolver_timeout           10s;
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://sheay.club/2017/08/15/Start-Markdown/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Shea">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Shea的小站">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/08/15/Start-Markdown/" itemprop="url">Start Markdown</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-15T22:22:33+08:00">
-                2017-08-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h1><p>使用#来代表标题，个数表示等级，例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># 一级标题</div><div class="line">## 二级标题</div><div class="line">### 三级标题</div><div class="line">#### 四级标题</div></pre></td></tr></table></figure></p>
-<p>#Image<br>在文章中插入指定大小的图片<br>‘’’<img src="/path/to/image" class="[class names]" title="[width] [height] [title text [alt text]]">‘’’</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1700,7 +1907,7 @@ resolver_timeout           10s;
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1746,7 +1953,7 @@ resolver_timeout           10s;
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
